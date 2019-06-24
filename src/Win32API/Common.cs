@@ -9,6 +9,7 @@ namespace Win32API
         public const string User32 = "user32.dll";
         public const string Hid = "hid.dll";
         public const string SetupApi = "setupapi.dll";
+        public const string WinMM = "winmm.dll";
     }
 
     public static class CONST
@@ -22,6 +23,7 @@ namespace Win32API
         public const uint WAIT_FAILED = 0xffffffff;
 
         public const int WAIT_INFINITE = -1;
+        public const int MaxResolution = 1;     //best resolution == 1 ms
     }
 
     #region ======== Structures for Win32API ========
