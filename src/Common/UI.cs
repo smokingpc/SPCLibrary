@@ -5,22 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Common
+namespace SpcCommon
 {
     public static class UI
     {
-        public static void SetTextBoxText(TextBox tb, string msg, bool append = true)
+        public static void SetText(TextBox tb, string msg, bool append = true)
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke((Action)(() => { SetTextBoxText(tb, msg, append); }));
+                tb.Invoke((Action)(() => { SetText(tb, msg, append); }));
             }
             else
             {
                 if (append)
-                    tb.AppendText(msg + "\r\n");
+                    tb.AppendText(msg);
                 else
-                    tb.Text = msg + "\r\n";
+                    tb.Text = msg;
+            }
+        }
+        public static void SetLine(TextBox tb, string msg, bool append = true)
+        {
+            if (tb.InvokeRequired)
+            {
+                tb.Invoke((Action)(() => { SetText(tb, msg, append); }));
+            }
+            else
+            {
+                SetText(tb, msg + "\r\n", append);
             }
         }
     }

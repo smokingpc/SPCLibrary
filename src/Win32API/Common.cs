@@ -26,9 +26,14 @@ namespace Win32API
         public const int MaxResolution = 1;     //best resolution == 1 ms
     }
 
+
+    #region ======== Callback Delegates for Win32API ========
+    public delegate void DelegateIOCompletion(uint errorCode, uint numBytes, OVERLAPPED pOVERLAP);
+    #endregion
+
     #region ======== Structures for Win32API ========
     [StructLayout(LayoutKind.Sequential)]
-    public struct OVERLAPPED
+    public class OVERLAPPED
     {
         public int Internal;
         public int InternalHigh;
@@ -38,7 +43,7 @@ namespace Win32API
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SECURITY_ATTRIBUTES
+    public class SECURITY_ATTRIBUTES
     {
         public int Length;
         public IntPtr SecurityDescriptor;
@@ -183,4 +188,26 @@ namespace Win32API
 
 
     #endregion
+
+    //#region ======== Structures for User32 ========
+
+    //[StructLayout(LayoutKind.Sequential)]
+    //public class DEV_BROADCAST_HDR
+    //{
+    //    uint dbch_size;
+    //    uint dbch_devicetype;
+    //    uint dbch_reserved;
+    //}
+
+    //#endregion
+    //#region ======== Enumerations for User32 ========
+    //public enum DBCH_DEVICETYPE : uint
+    //{
+    //    OEM = 0,                    //DBT_DEVTYP_OEM
+    //    VOLUME = 0x00000002,        //DBT_DEVTYP_VOLUME
+    //    PORT = 0x00000003,          //DBT_DEVTYP_PORT
+    //    DEVICEINTERFACE = 0x00000005,//DBT_DEVTYP_DEVICEINTERFACE
+    //    HANDLE = 0x00000006,        //DBT_DEVTYP_HANDLE
+    //}
+    //#endregion
 }
