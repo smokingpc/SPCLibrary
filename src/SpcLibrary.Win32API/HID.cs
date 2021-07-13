@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Win32API
+namespace SpcLibrary.Win32API
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct HIDD_ATTRIBUTES

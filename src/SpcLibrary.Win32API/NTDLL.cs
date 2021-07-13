@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 
-namespace Win32API
+namespace SpcLibrary.Win32API
 {
     public static class NTDLL
     {

@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B497C6A7-7D81-4DBB-BBB1-6AE36A4181D9}</ProjectGuid>
+    <ProjectGuid>{A04BCFA3-C191-41DD-B70E-115E26425EB2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>System</RootNamespace>
-    <AssemblyName>System</AssemblyName>
+    <RootNamespace>SpcLibrary.Win32API</RootNamespace>
+    <AssemblyName>SpcLibrary.Win32API</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,17 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Args_and_Delegate.cs" />
-    <Compile Include="Interfaces.cs" />
-    <Compile Include="HiResTimer.cs" />
-    <Compile Include="WaitTimer.cs" />
+    <Compile Include="AutoHandle.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="HID.cs" />
+    <Compile Include="Kernel32.cs" />
+    <Compile Include="NTDLL.cs" />
+    <Compile Include="SetupAPI.cs" />
+    <Compile Include="User32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Win32API\Win32API.csproj">
-      <Project>{a04bcfa3-c191-41dd-b70e-115e26425eb2}</Project>
-      <Name>Win32API</Name>
-    </ProjectReference>
+    <Compile Include="WinMM.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

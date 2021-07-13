@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Win32API
+namespace SpcLibrary.Win32API
 {
     public static class Kernel32
     {

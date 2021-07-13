@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SpcCommon.Extension
+namespace SpcCommon.Common.Extension
 {
     public static class StringExtensions
     {

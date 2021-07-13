@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 
-namespace System
+namespace SpcLibrary.System
 {
     public class CWaitTimer
     {

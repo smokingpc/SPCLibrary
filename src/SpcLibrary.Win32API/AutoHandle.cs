@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 
-namespace Win32API
+namespace SpcLibrary.Win32API
 {
     //AutoHandle 是對應windows native system 的 HANDLE 型別。
     //為了避免handle leak之類的毛病，所以將HANDLE包成 CAutoHandle，

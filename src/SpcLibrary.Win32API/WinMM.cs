@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Win32API
+namespace SpcLibrary.Win32API
 {
     //TimeProc() callback definition
     public delegate void MMTimerCallback(UInt32 timer_id, UInt32 msg, UIntPtr user_ctx, UIntPtr reserve1, UIntPtr reserve2);

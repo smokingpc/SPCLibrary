@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using Win32API;
 
-namespace System
+namespace SpcLibrary.System
 {
     //High Resolution Timer.
     //Minimun resolution is 0.5ms

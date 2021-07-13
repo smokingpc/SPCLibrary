@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SpcCommon
+namespace SpcLibrary.Common.UI
 {
     public static class UI
     {
