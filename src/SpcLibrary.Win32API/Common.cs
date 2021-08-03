@@ -23,7 +23,9 @@ namespace SpcLibrary.Win32API
         public const uint WAIT_FAILED = 0xffffffff;
 
         public const int WAIT_INFINITE = -1;
-        public const int MaxResolution = 1;     //best resolution == 1 ms
+        public const int MAX_RESOLUTION = 1;     //best resolution == 1 ms
+
+        public const int MAX_PATH = 260;
     }
 
 
@@ -188,26 +190,4 @@ namespace SpcLibrary.Win32API
 
 
     #endregion
-
-    //#region ======== Structures for User32 ========
-
-    //[StructLayout(LayoutKind.Sequential)]
-    //public class DEV_BROADCAST_HDR
-    //{
-    //    uint dbch_size;
-    //    uint dbch_devicetype;
-    //    uint dbch_reserved;
-    //}
-
-    //#endregion
-    //#region ======== Enumerations for User32 ========
-    //public enum DBCH_DEVICETYPE : uint
-    //{
-    //    OEM = 0,                    //DBT_DEVTYP_OEM
-    //    VOLUME = 0x00000002,        //DBT_DEVTYP_VOLUME
-    //    PORT = 0x00000003,          //DBT_DEVTYP_PORT
-    //    DEVICEINTERFACE = 0x00000005,//DBT_DEVTYP_DEVICEINTERFACE
-    //    HANDLE = 0x00000006,        //DBT_DEVTYP_HANDLE
-    //}
-    //#endregion
 }

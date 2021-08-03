@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace SpcLibrary.Win32API
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct HIDD_ATTRIBUTES
+    public class HIDD_ATTRIBUTES
     {
         public int Size;
         public ushort VendorID;
@@ -17,7 +17,7 @@ namespace SpcLibrary.Win32API
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct HIDP_CAPS
+    public class HIDP_CAPS
     {
         public short Usage;
         public short UsagePage;
@@ -85,13 +85,13 @@ namespace SpcLibrary.Win32API
         static public extern bool HidD_FlushQueue(IntPtr hidDeviceObject);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern bool HidD_GetAttributes(IntPtr hidDeviceObject, ref HIDD_ATTRIBUTES attributes);
+        static public extern bool HidD_GetAttributes(IntPtr hidDeviceObject, HIDD_ATTRIBUTES attributes);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern bool HidD_GetFeature(IntPtr hidDeviceObject, byte[] lpReportBuffer, int reportBufferLength);
+        static public extern bool HidD_GetFeature(IntPtr hidDeviceObject, [MarshalAs(UnmanagedType.LPArray)] byte[] lpReportBuffer, int reportBufferLength);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern bool HidD_GetInputReport(IntPtr hidDeviceObject, byte[] lpReportBuffer, int reportBufferLength);
+        static public extern bool HidD_GetInputReport(IntPtr hidDeviceObject, [MarshalAs(UnmanagedType.LPArray)] byte[] lpReportBuffer, int reportBufferLength);
 
         [DllImport(Win32DLL.Hid)]
         static public extern void HidD_GetHidGuid(ref Guid hidGuid);
@@ -106,16 +106,16 @@ namespace SpcLibrary.Win32API
         static public extern bool HidD_FreePreparsedData(IntPtr preparsedData);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern bool HidD_SetFeature(IntPtr hidDeviceObject, byte[] lpReportBuffer, int reportBufferLength);
+        static public extern bool HidD_SetFeature(IntPtr hidDeviceObject, [MarshalAs(UnmanagedType.LPArray)] byte[] lpReportBuffer, int reportBufferLength);
 
         [DllImport(Win32DLL.Hid)]
         static public extern bool HidD_SetNumInputBuffers(IntPtr hidDeviceObject, int numberBuffers);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern bool HidD_SetOutputReport(IntPtr hidDeviceObject, byte[] lpReportBuffer, int reportBufferLength);
+        static public extern bool HidD_SetOutputReport(IntPtr hidDeviceObject, [MarshalAs(UnmanagedType.LPArray)] byte[] lpReportBuffer, int reportBufferLength);
 
         [DllImport(Win32DLL.Hid)]
-        static public extern int HidP_GetCaps(IntPtr preparsedData, ref HIDP_CAPS capabilities);
+        static public extern int HidP_GetCaps(IntPtr preparsedData, HIDP_CAPS capabilities);
 
         [DllImport(Win32DLL.Hid)]
         static public extern int HidP_GetValueCaps(short reportType, ref byte valueCaps, ref short valueCapsLength, IntPtr preparsedData);

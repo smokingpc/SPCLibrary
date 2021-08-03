@@ -7,6 +7,41 @@ using System.Runtime.InteropServices;
 
 namespace SpcLibrary.Win32API
 {
+    //String Marshaling 參照： https://docs.microsoft.com/en-us/dotnet/framework/interop/default-marshaling-for-strings
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class SP_DEVICE_INTERFACE_DATA
+    {
+        public int cbSize;
+        public System.Guid InterfaceClassGuid;
+        public int Flags;
+        public IntPtr Reserved;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class SP_DEVINFO_DATA
+    {
+        public int cbSize;
+        public Guid ClassGuid;
+        public int DevInst;
+        public IntPtr Reserved;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public class SP_DEVICE_INTERFACE_DETAIL_DATA
+    {
+        public int Size;
+        [MarshalAs(UnmanagedType.LPWStr, SizeConst = 1024)]
+        public string DevicePath;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class DEVPROPKEY
+    {
+        public Guid fmtid;
+        public ulong pid;
+    }
+
     public static class SetupAPI
     {
         public const int DBT_DEVICEARRIVAL = 0x8000;
@@ -57,39 +92,6 @@ namespace SpcLibrary.Win32API
         public const int SPDRP_UI_NUMBER_DESC_FORMAT = 0x1d;
 
         public const int SPDRP_UPPERFILTERS = 0x11;
-
-        [StructLayout(LayoutKind.Sequential)]
-        public class SP_DEVICE_INTERFACE_DATA
-        {
-            public int cbSize;
-            public System.Guid InterfaceClassGuid;
-            public int Flags;
-            public IntPtr Reserved;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public class SP_DEVINFO_DATA
-        {
-            public int cbSize;
-            public Guid ClassGuid;
-            public int DevInst;
-            public IntPtr Reserved;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public class SP_DEVICE_INTERFACE_DETAIL_DATA
-        {
-            public int Size;
-            [MarshalAs(UnmanagedType.LPWStr, SizeConst = 1024)]
-            public string DevicePath;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public class DEVPROPKEY
-        {
-            public Guid fmtid;
-            public ulong pid;
-        }
 
         public static DEVPROPKEY DEVPKEY_Device_BusReportedDeviceDesc =
             new DEVPROPKEY { fmtid = new Guid(0x540b947e, 0x8b40, 0x45bc, 0xa8, 0xa2, 0x6a, 0x0b, 0x89, 0x4c, 0xbd, 0xa2), pid = 4 };

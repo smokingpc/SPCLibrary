@@ -70,14 +70,15 @@ namespace SpcLibrary.Win32API
                     SECURITY_ATTRIBUTES security, FILE_DISPOSITION disposition, FILE_ATTR_AND_FLAG attribute,
                     CAutoHandle template)
         {
-            IntPtr ret = CreateFile(filename, (uint)access, (uint)share, security, (uint)disposition, (uint)attribute, template);
+            IntPtr temp = (template == null) ? IntPtr.Zero : (IntPtr)template;
+            IntPtr ret = CreateFile(filename, (uint)access, (uint)share, security, (uint)disposition, (uint)attribute, temp);
             return new CAutoHandle(ret);
         }
 
         static public CAutoHandle CreateFile(string filename, ACCESS_TYPE access, FILE_SHARE_MODE share,
                             FILE_DISPOSITION disposition, FILE_ATTR_AND_FLAG attribute)
         {
-            return CreateFile(filename, access, share, null, disposition, attribute, null);
+            return CreateFile(filename, access, share, null, disposition, attribute, IntPtr.Zero);
         }
 
         //參數是class的已經是reference type，直接塞物件進去，Marshal 會幫我們弄成pointer給 C function

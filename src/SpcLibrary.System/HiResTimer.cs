@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Win32API;
+using SpcLibrary.Win32API;
 
 namespace SpcLibrary.System
 {
@@ -17,8 +17,8 @@ namespace SpcLibrary.System
 
         private UInt32 TimerID = 0;
         private UInt32 Period = 0;
-        private UInt32 Resolution = CONST.MaxResolution;      //resolution = 1ms
-        private UInt32 EventType = (UInt32)(MMTIMER_EVENT_TYPE.CALLBACK_FUNCTION | MMTIMER_EVENT_TYPE.KILL_SYNCHRONOUS);
+        private UInt32 Resolution = CONST.MAX_RESOLUTION;      //resolution = 1ms
+        private MMTIMER_EVENT_TYPE EventType = (MMTIMER_EVENT_TYPE.CB_FUNCTION | MMTIMER_EVENT_TYPE.KILL_SYNC);
 
         public CHighResTimer()
         { }
