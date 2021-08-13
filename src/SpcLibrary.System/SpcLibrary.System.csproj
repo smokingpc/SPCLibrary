@@ -44,6 +44,7 @@
     <Compile Include="Args_and_Delegate.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="HiResTimer.cs" />
+    <Compile Include="SystemUtils.cs" />
     <Compile Include="WaitTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

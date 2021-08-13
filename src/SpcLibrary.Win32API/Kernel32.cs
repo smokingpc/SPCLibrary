@@ -14,6 +14,9 @@ namespace SpcLibrary.Win32API
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
         static public extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32", SetLastError = true)]
+        static public extern bool SetSystemTime(SYSTEMTIME time);
         #endregion
 
         #region ======== I/O ========

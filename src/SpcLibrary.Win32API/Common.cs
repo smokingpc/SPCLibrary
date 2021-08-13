@@ -35,6 +35,32 @@ namespace SpcLibrary.Win32API
 
     #region ======== Structures for Win32API ========
     [StructLayout(LayoutKind.Sequential)]
+    public class SYSTEMTIME
+    {
+        public ushort Year;
+        public ushort Month;
+        public ushort DayOfWeek;
+        public ushort Day;
+        public ushort Hour;
+        public ushort Minute;
+        public ushort Second;
+        public ushort Milliseconds;
+
+        public SYSTEMTIME(DateTime dt)
+        {
+            Year = (ushort)dt.Year;
+            Month = (ushort)dt.Month;
+            DayOfWeek = (ushort)dt.DayOfWeek;
+            Day = (ushort)dt.Day;
+            Hour = (ushort)dt.Hour;
+            Minute = (ushort)dt.Minute;
+            Second = (ushort)dt.Second;
+            Milliseconds = (ushort)dt.Millisecond;
+        }
+    }
+
+
+    [StructLayout(LayoutKind.Sequential)]
     public class OVERLAPPED
     {
         public int Internal;
