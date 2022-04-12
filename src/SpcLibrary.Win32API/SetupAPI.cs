@@ -9,13 +9,35 @@ namespace SpcLibrary.Win32API
 {
     //String Marshaling 參照： https://docs.microsoft.com/en-us/dotnet/framework/interop/default-marshaling-for-strings
 
+    public static class GUID_DEVINTERFACE
+    {
+        //DEFINE_GUID(GUID_DEVINTERFACE_DISK,                   0x53f56307L, 0xb6bf, 0x11d0, 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b);
+        //DEFINE_GUID(GUID_DEVINTERFACE_PARTITION,              0x53f5630aL, 0xb6bf, 0x11d0, 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b);
+        //DEFINE_GUID(GUID_DEVINTERFACE_VOLUME,                 0x53f5630dL, 0xb6bf, 0x11d0, 0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b);
+        //DEFINE_GUID(GUID_DEVINTERFACE_STORAGEPORT,            0x2accfe60L, 0xc130, 0x11d2, 0xb0, 0x82, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b);
+        //DEFINE_GUID(GUID_DEVINTERFACE_VMLUN,                  0x6f416619L, 0x9f29, 0x42a5, 0xb2, 0x0b, 0x37, 0xe2, 0x19, 0xca, 0x02, 0xb0);
+        public static Guid DISK = new Guid("{0x53f56307, 0xb6bf, 0x11d0, {0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b}}");
+        public static Guid PARTITION = new Guid("{0x53f5630a, 0xb6bf, 0x11d0, {0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b}}");
+        public static Guid VOLUME = new Guid("{0x53f5630d, 0xb6bf, 0x11d0, {0x94, 0xf2, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b}}");
+        public static Guid STORAGEPORT = new Guid("{0x2accfe60, 0xc130, 0x11d2, {0xb0, 0x82, 0x00, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b}}");
+        public static Guid VMLUN = new Guid("{0x6f416619, 0x9f29, 0x42a5, {0xb2, 0x0b, 0x37, 0xe2, 0x19, 0xca, 0x02, 0xb0}}");
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public class SP_DEVICE_INTERFACE_DATA
     {
-        public int cbSize;
+        public int cbSize = Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>();
         public System.Guid InterfaceClassGuid;
-        public int Flags;
-        public IntPtr Reserved;
+        public int Flags = 0;
+        public IntPtr Reserved = IntPtr.Zero;
+
+        public SP_DEVICE_INTERFACE_DATA() { }
+        public SP_DEVICE_INTERFACE_DATA(Guid guid, int flags) 
+        {
+            //cbSize = Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>(); 
+            this.InterfaceClassGuid = guid;
+            this.Flags = flags;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -106,22 +128,22 @@ namespace SpcLibrary.Win32API
         static public extern bool SetupDiEnumDeviceInfo(IntPtr deviceInfoSet, int memberIndex, SP_DEVINFO_DATA deviceInfoData);
 
         [DllImport(Win32DLL.SetupApi, SetLastError = true)]
-        public static extern int SetupDiCreateDeviceInfoList(ref Guid classGuid, int hwndParent);
+        public static extern CAutoHandle SetupDiCreateDeviceInfoList(ref Guid classGuid, IntPtr hwndParent);
 
         [DllImport(Win32DLL.SetupApi, SetLastError = true)]
-        static public extern int SetupDiDestroyDeviceInfoList(IntPtr deviceInfoSet);
+        static public extern bool SetupDiDestroyDeviceInfoList(IntPtr deviceInfoSet);
 
         [DllImport(Win32DLL.SetupApi, SetLastError = true)]
-        static public extern bool SetupDiEnumDeviceInterfaces(IntPtr deviceInfoSet, SP_DEVINFO_DATA deviceInfoData, ref Guid interfaceClassGuid, int memberIndex, SP_DEVICE_INTERFACE_DATA deviceInterfaceData);
+        static public extern bool SetupDiEnumDeviceInterfaces(IntPtr deviceInfoSet, ref SP_DEVINFO_DATA deviceInfoData, ref Guid interfaceClassGuid, uint memberIndex, ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData);
+
+        [DllImport(Win32DLL.SetupApi, SetLastError = true)]
+        static public extern bool SetupDiEnumDeviceInterfaces(IntPtr deviceInfoSet, IntPtr deviceInfoData, ref Guid interfaceClassGuid, uint memberIndex, ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData);
 
         [DllImport(Win32DLL.SetupApi, SetLastError = true, EntryPoint = "SetupDiEnumDeviceInterfaces")]
         static public extern bool SetupDiEnumDeviceInterfaces2(IntPtr deviceInfoSet, IntPtr devinfo_data, ref Guid interfaceClassGuid, int memberIndex, SP_DEVICE_INTERFACE_DATA deviceInterfaceData);
 
         [DllImport(Win32DLL.SetupApi, CharSet = CharSet.Unicode, EntryPoint = "SetupDiGetClassDevsW")]
-        static public extern IntPtr SetupDiGetClassDevs(ref System.Guid classGuid, [MarshalAs(UnmanagedType.LPWStr)] string enumerator, int hwndParent, uint flags);
-
-        //[DllImport(Win32DLL.SetupApi, CharSet = CharSet.Unicode, EntryPoint = "SetupDiGetClassDevs")]
-        //static public extern IntPtr SetupDiGetClassDevs2(ref System.Guid guid, IntPtr enumerator, int hwndParent, uint flags);
+        static public extern CAutoHandle SetupDiGetClassDevs(ref System.Guid classGuid, [MarshalAs(UnmanagedType.LPWStr)] string enumerator, IntPtr hwndParent, uint flags);
 
         [DllImport(Win32DLL.SetupApi, CharSet = CharSet.Unicode)]
         static public extern bool SetupDiGetDeviceInterfaceDetailBuffer(IntPtr deviceInfoSet, SP_DEVICE_INTERFACE_DATA deviceInterfaceData, IntPtr deviceInterfaceDetailData, int deviceInterfaceDetailDataSize, out int requiredSize, IntPtr deviceInfoData);

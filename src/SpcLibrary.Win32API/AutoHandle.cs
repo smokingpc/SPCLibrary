@@ -17,6 +17,10 @@ namespace SpcLibrary.Win32API
         {
             get { return ((Handle == IntPtr.Zero) || (Handle == InvalidValue)); }
         }
+        public bool IsValid
+        {
+            get { return !IsInvalid; }
+        }
 
         private string AllocTrace = "";        //用來紀錄 "哪段code Allocate這個Handle的？"
         private IntPtr Handle = IntPtr.Zero;
