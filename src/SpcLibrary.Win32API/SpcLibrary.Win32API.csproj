@@ -45,6 +45,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="HID.cs" />
     <Compile Include="Kernel32.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="NTDLL.cs" />
     <Compile Include="SetupAPI.cs" />
     <Compile Include="User32.cs" />

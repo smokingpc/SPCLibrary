@@ -45,18 +45,21 @@ namespace EnumPhysicalDiskTest
 
             while (true == SetupAPI.SetupDiEnumDeviceInterfaces(handle, IntPtr.Zero, ref GUID_DEVINTERFACE.DISK, devid, ref ifdata))
             {
-            //    DWORD need_size = 0;
-            //    DWORD return_size = 0;
-            //    BOOL ok = FALSE;
-            //    PSP_DEVICE_INTERFACE_DETAIL_DATA ifdetail = NULL;
-            //    devid++;
-            //    SetupDiGetDeviceInterfaceDetail(devinfo, &ifdata, NULL, 0, &need_size, NULL);
-            //    need_size = need_size * 2;
-            //    BYTE* buffer = new BYTE[need_size];
-            //    ZeroMemory(buffer, need_size);
-            //    ifdetail = (PSP_DEVICE_INTERFACE_DETAIL_DATA)buffer;
-            //    ifdetail->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-            //    ok = SetupDiGetDeviceInterfaceDetail(devinfo, &ifdata, ifdetail, need_size, &need_size, NULL);
+                SP_DEVICE_INTERFACE_DETAIL_DATA ifdetail = new SP_DEVICE_INTERFACE_DETAIL_DATA();
+                UInt32 ret_size = 0;
+                bool ok = SetupAPI.SetupDiGetDeviceInterfaceDetail(handle, ref ifdata, ref ifdetail, ifdetail.cbSize, out ret_size, IntPtr.Zero);
+                if (ok) 
+                {
+                    CAutoHandle file = Kernel32.CreateFile(ifdetail.DevicePath, ACCESS_TYPE.GENERIC_READ,
+                                FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
+                                FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
+                    if (file.IsValid)
+                    {
+                        STORAGE_DEVICE_NUMBER devnum = new STORAGE_DEVICE_NUMBER();
+                        Kernel32.DeviceIoControl(file, )
+                    }
+                }
+                devid++;
             //    if (TRUE == ok)
             //    {
             //        HANDLE device = CreateFile(ifdetail->DevicePath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -74,19 +77,19 @@ namespace EnumPhysicalDiskTest
             //                &return_size,
             //                NULL);
 
-            //            if (TRUE == ok)
-            //                wprintf(PRINT_PHYSICAL_DISK_FORMAT, ifdetail->DevicePath, disk_number.DeviceNumber);
-            //            CloseHandle(device);
-            //        }
-            //        else
-            //            printf("CreateFile() failed, LastError=%d\n", GetLastError());
-            //    }
-            //    else
-            //        printf("SetupDiGetDeviceInterfaceDetail() failed, LastError=%d\n", GetLastError());
-            //    delete[] buffer;
-            //}
+                //            if (TRUE == ok)
+                //                wprintf(PRINT_PHYSICAL_DISK_FORMAT, ifdetail->DevicePath, disk_number.DeviceNumber);
+                //            CloseHandle(device);
+                //        }
+                //        else
+                //            printf("CreateFile() failed, LastError=%d\n", GetLastError());
+                //    }
+                //    else
+                //        printf("SetupDiGetDeviceInterfaceDetail() failed, LastError=%d\n", GetLastError());
+                //    delete[] buffer;
+                //}
 
-        }
+            }
         }
     }
 }
