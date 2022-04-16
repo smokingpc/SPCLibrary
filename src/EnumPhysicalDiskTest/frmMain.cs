@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SpcCommon.Common;
 using SpcCommon.Common.Extension;
+using System.Runtime.InteropServices;
 using SpcLibrary.Win32API;
 using SpcLibrary.DeviceIoControl;
 using SpcLibrary.Common.UI;
@@ -38,30 +39,8 @@ namespace EnumPhysicalDiskTest
                 return;
             }
 
-            uint devid = 0;
-            UInt32 last_error = 0;
-            SP_DEVINFO_DATA devindo = new SP_DEVINFO_DATA();
-            while (true == SetupAPI.SetupDiEnumDeviceInfo(handle, devid, ref devindo))
-            {
-                devindo = new SP_DEVINFO_DATA();
-                devid++;
-            }
-            //SetupDiEnumDeviceInfo(IntPtr deviceInfoSet, int memberIndex, ref SP_DEVINFO_DATA deviceInfoData);
-        }
-        private void button1_Click2(object sender, EventArgs e)
-        {
-            ClearAll();
-            HDEVINFO handle = SetupAPI.SetupDiGetClassDevs(
-                                GUID_DEVINTERFACE.DISK, DIGCF.PRESENT | DIGCF.DEVICEINTERFACE);
-
-            if (handle.IsInvalid)
-            {
-                textBox1.Text = "SetupDiGetClassDevs() failed!";
-                return;
-            }
-
             SP_DEVICE_INTERFACE_DATA ifdata = new SP_DEVICE_INTERFACE_DATA();
-            uint devid = 0;
+            uint devid = 1;
             UInt32 last_error = 0;
             while (true == SetupAPI.SetupDiEnumDeviceInterfaces(handle, GUID_DEVINTERFACE.DISK, devid, ref ifdata))
             {
