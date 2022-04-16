@@ -9,7 +9,7 @@ namespace SpcLibrary.Common.UI
 {
     public static class UI
     {
-        public static void SetText(TextBox tb, string msg, bool append = true)
+        public static void SetText(this TextBox tb, string msg, bool append = true)
         {
             if (tb.InvokeRequired)
             {
@@ -23,16 +23,16 @@ namespace SpcLibrary.Common.UI
                     tb.Text = msg;
             }
         }
-        public static void SetLine(TextBox tb, string msg, bool append = true)
-        {
-            if (tb.InvokeRequired)
-            {
-                tb.Invoke((Action)(() => { SetText(tb, msg, append); }));
-            }
-            else
-            {
-                SetText(tb, msg + "\r\n", append);
-            }
-        }
+        //public static void SetLine(this TextBox tb, string msg, bool append = true)
+        //{
+        //    if (tb.InvokeRequired)
+        //    {
+        //        tb.Invoke((Action)(() => { SetText(tb, msg, append); }));
+        //    }
+        //    else
+        //    {
+        //        SetText(tb, msg + "\r\n", append);
+        //    }
+        //}
     }
 }

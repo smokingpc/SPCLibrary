@@ -15,7 +15,7 @@ namespace SpcCommon.Common.Extension
     /// </summary>
     /// <param name="data">輸入的HEX字串，可以用空格或逗號分隔</param>
     /// <returns></returns>
-        public static byte[] ToBuffer(this string data)
+        public static byte[] ToBytes(this string data)
         {
             List<byte> ret = new List<byte>();
             var tokens = data.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries );

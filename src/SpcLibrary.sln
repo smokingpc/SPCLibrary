@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{930A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumPhysicalDiskTest", "EnumPhysicalDiskTest\EnumPhysicalDiskTest.csproj", "{39DE29EA-39AB-40FA-B979-9895DF216E76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpcLibrary.DeviceIoControl", "SpcLibrary.DeviceIoControl\SpcLibrary.DeviceIoControl.csproj", "{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

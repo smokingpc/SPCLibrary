@@ -103,5 +103,56 @@ namespace SpcCommon.Common.Extension
             handle.Free();
             return result;
         }
+
+        public static byte[] ToBytes<T>(this T obj) 
+        {
+            byte[] bytes = new byte[Marshal.SizeOf(typeof(T))];
+            GCHandle pinStructure = GCHandle.Alloc(obj, GCHandleType.Pinned);
+            try
+            {
+                Marshal.Copy(pinStructure.AddrOfPinnedObject(), bytes, 0, bytes.Length);
+                return bytes;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                pinStructure.Free();
+            }
+        }
+
+        public static T FromBytes<T>(this byte[] buffer, bool copy = true)
+        {
+            return buffer.FromBytes<T>(0, copy);
+        }
+        public static T FromBytes<T>(this byte[] buffer, int offset, bool copy = true)
+        {
+            T result = default(T);
+            int layout_size = Marshal.SizeOf<T>();
+
+            if (buffer != null && (offset + layout_size) <= buffer.Length)
+            {
+                byte[] map_buffer = null;
+                if (copy)
+                {
+                    map_buffer = new byte[layout_size];
+                    Array.Copy(buffer, offset, map_buffer, 0, layout_size);
+                }
+                else
+                    map_buffer = buffer;
+
+                //GCHandleType.Pinned 允許這個buffer做出來的handle直接取用底下的實體記憶體位置
+                //相當於允許直接使用底層的C指標
+                GCHandle handle = GCHandle.Alloc(map_buffer, GCHandleType.Pinned);
+                result = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+
+                //pin太久會造成C#的記憶體回收機制被打亂，所以趕緊用完趕緊釋放，不要一直占住不放
+                handle.Free();
+            }
+
+            return result;
+        }
     }
 }
