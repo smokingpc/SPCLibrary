@@ -39,7 +39,7 @@ namespace SpcLibrary.Win32API
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct HIDP_VALUE_CAPS
+    public class HIDP_VALUE_CAPS
     {
         public short UsagePage;
         public byte ReportID;

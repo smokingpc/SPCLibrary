@@ -60,15 +60,15 @@ namespace SpcLibrary.Win32API
     }
 
 
-    [StructLayout(LayoutKind.Sequential)]
-    public class OVERLAPPED
-    {
-        public int Internal;
-        public int InternalHigh;
-        public int Offset;
-        public int OffsetHigh;
-        public int hEvent;
-    }
+    //[StructLayout(LayoutKind.Sequential)]
+    //public class OVERLAPPED
+    //{
+    //    public int Internal;
+    //    public int InternalHigh;
+    //    public int Offset;
+    //    public int OffsetHigh;
+    //    public int hEvent;
+    //}
 
     [StructLayout(LayoutKind.Sequential)]
     public class SECURITY_ATTRIBUTES
@@ -76,52 +76,6 @@ namespace SpcLibrary.Win32API
         public int Length;
         public IntPtr SecurityDescriptor;
         public bool InheritHandle;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class GUID
-    {
-        int Data1 = 0;
-        Int16 Data2 = 0;
-        short Data3 = 0;
-        UInt64 Data4 = 0;
-
-        public static implicit operator System.Guid(GUID value)
-        {
-            System.Guid ret = new Guid(value.Data1, value.Data2, value.Data3, BitConverter.GetBytes(value.Data4));
-            return ret;
-        }
-
-        public static implicit operator GUID(System.Guid value)
-        {
-            GUID ret = new GUID(value.ToByteArray());
-            return ret;
-        }
-
-        public GUID() { }
-        public GUID(System.Guid data) : this(data.ToByteArray()){ }
-        public GUID(byte[] data) :this()
-        { Parse(data); }
-
-        public void Parse(byte[] buffer)
-        {
-            int index = 0;
-            Data1 = (Int32)BitConverter.ToInt32(buffer, index);
-            index += sizeof(UInt32);
-
-            Data2 = BitConverter.ToInt16(buffer, index);
-            index += sizeof(UInt16);
-
-            Data3 = (Int16)BitConverter.ToInt16(buffer, index);
-            index += sizeof(UInt16);
-
-            Data4 = (UInt64)BitConverter.ToUInt64(buffer, index);
-        }
-
-        public byte[] ToBytes()
-        {
-            return ((System.Guid)this).ToByteArray();
-        }
     }
     #endregion
 

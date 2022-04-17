@@ -3,6 +3,29 @@ using System.Runtime.InteropServices;
 
 namespace SpcLibrary.Win32API
 {
+    // Please refer to struct OVERLAPPED which defined in <windows.h>
+    [StructLayout(LayoutKind.Sequential)]
+    public class Win32Overlapped
+    {
+        public IntPtr InternalLow;
+        public IntPtr InternalHigh;
+        public int OffsetLow;
+        public int OffsetHigh;
+        public IntPtr EventHandle;
+
+        public IntPtr Pointer
+        {
+            get 
+            {
+                if (IntPtr.Size == 4)
+                    return (IntPtr)OffsetLow;
+                long temp = OffsetHigh;
+                return new IntPtr((temp << 32) + OffsetLow);
+            }
+        }
+    }
+
+
     public static class Kernel32
     {
         #region ======== Misc ========
@@ -24,13 +47,13 @@ namespace SpcLibrary.Win32API
         static public extern bool CancelSynchronousIo(IntPtr hObject);
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
-        static public extern bool GetOverlappedResult(IntPtr hFile, ref System.Threading.NativeOverlapped lpOverlapped, ref uint lpNumberOfBytesTransferred, bool bWait);
+        static public extern bool GetOverlappedResult(IntPtr hFile, Win32Overlapped lpOverlapped, ref uint lpNumberOfBytesTransferred, bool bWait);
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
         static public extern bool CancelIo(IntPtr hFile);
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
-        static public extern bool CancelIoEx(IntPtr hFile, ref System.Threading.NativeOverlapped lpOverlapped);
+        static public extern bool CancelIoEx(IntPtr hFile, Win32Overlapped lpOverlapped);
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true, EntryPoint = "CancelIoEx")]
         static public extern bool CancelIoEx2(IntPtr hFile, IntPtr lpOverlapped);
@@ -42,8 +65,15 @@ namespace SpcLibrary.Win32API
                                             [MarshalAs(UnmanagedType.LPArray)] byte[] lpOutBuffer,
                                             uint nOutBufferSize,
                                             ref uint lpBytesReturned,
-                                            IntPtr lpOverlapped);
-
+                                            Win32Overlapped lpOverlapped);
+        [DllImport(Win32DLL.Kernel32, SetLastError = true)]
+        static public extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode,
+                                            IntPtr lpInBuffer,
+                                            uint nInBufferSize,
+                                            IntPtr lpOutBuffer,
+                                            uint nOutBufferSize,
+                                            ref uint lpBytesReturned,
+                                            Win32Overlapped lpOverlapped);
         #endregion
 
         #region ======== Pipe ========
@@ -59,13 +89,11 @@ namespace SpcLibrary.Win32API
         }
         //hPipeToRead 與 hPipeToWrite 都是回傳值
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
-        static public extern bool CreatePipe(out IntPtr hPipeToRead, out IntPtr hPipeToWrite, SECURITY_ATTRIBUTES attribute, uint buffer_size);
+        static public extern bool CreatePipe(ref IntPtr hPipeToRead, ref IntPtr hPipeToWrite, SECURITY_ATTRIBUTES attribute, uint buffer_size);
 
         [DllImport(Win32DLL.Kernel32, CharSet = CharSet.Unicode, SetLastError = true, EntryPoint = "CreateNamedPipeW")]
         static public extern IntPtr CreateNamedPipe([MarshalAs(UnmanagedType.LPWStr)] string pipeName, uint dwOpenMode, uint dwPipeMode, uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut, SECURITY_ATTRIBUTES lpSecurityAttributes);
         
-        //[DllImport(Win32DLL.Kernel32, CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "CreateNamedPipe")]
-        //static public extern IntPtr CreateNamedPipe2(string pipeName, uint dwOpenMode, uint dwPipeMode, uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut, IntPtr lpSecurityAttributes);
         #endregion
 
         #region ======== File ========
@@ -74,8 +102,7 @@ namespace SpcLibrary.Win32API
                     CAutoHandle template)
         {
             IntPtr temp = (template == null) ? IntPtr.Zero : (IntPtr)template;
-            IntPtr ret = CreateFile(filename, (uint)access, (uint)share, security, (uint)disposition, (uint)attribute, temp);
-            return new CAutoHandle(ret);
+            return CreateFile(filename, (uint)access, (uint)share, security, (uint)disposition, (uint)attribute, temp);
         }
 
         static public CAutoHandle CreateFile(string filename, ACCESS_TYPE access, FILE_SHARE_MODE share,
@@ -90,8 +117,7 @@ namespace SpcLibrary.Win32API
 
         static public CAutoHandle CreateEvent(bool reset, bool init, string name)
         {
-            IntPtr ret = CreateEvent(null, reset, init, name);
-            return new CAutoHandle(ret);
+            return CreateEvent(null, reset, init, name);
         }
 
         [DllImport(Win32DLL.Kernel32, CharSet = CharSet.Unicode, EntryPoint = "CreateEventW")]
@@ -102,14 +128,14 @@ namespace SpcLibrary.Win32API
                                             [MarshalAs(UnmanagedType.LPArray)] byte[] lpBuffer, 
                                             uint nNumberOfBytesToWrite, 
                                             ref uint lpNumberOfBytesWritten,
-                                            OVERLAPPED lpOverlapped);
+                                            Win32Overlapped lpOverlapped);
         
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
         static public extern bool WriteFileEx(IntPtr hFile,
                                             [MarshalAs(UnmanagedType.LPArray)] byte[] lpBuffer, 
                                             uint nNumberOfBytesToWrite, 
-                                            ref uint lpNumberOfBytesWritten, 
-                                            OVERLAPPED lpOverlapped,
+                                            ref uint lpNumberOfBytesWritten,
+                                            Win32Overlapped lpOverlapped,
                                             DelegateIOCompletion lpCompletion);
 
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
@@ -117,14 +143,14 @@ namespace SpcLibrary.Win32API
                                     [MarshalAs(UnmanagedType.LPArray)] byte[] lpBuffer, 
                                     uint nNumberOfBytesToRead, 
                                     ref uint lpNumberOfBytesRead,
-                                    OVERLAPPED lpOverlapped);
+                                    Win32Overlapped lpOverlapped);
         
         [DllImport(Win32DLL.Kernel32, SetLastError = true)]
         static public extern bool ReadFileEx(IntPtr hFile,
                                     [MarshalAs(UnmanagedType.LPArray)] byte[] lpBuffer,
                                     uint nNumberOfBytesToRead,
                                     ref uint lpNumberOfBytesRead,
-                                    OVERLAPPED lpOverlapped,
+                                    Win32Overlapped lpOverlapped,
                                     DelegateIOCompletion lpCompletion);
         #endregion
     }
