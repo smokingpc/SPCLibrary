@@ -40,16 +40,15 @@ namespace EnumPhysicalDiskTest
             }
 
             SP_DEVICE_INTERFACE_DATA ifdata = new SP_DEVICE_INTERFACE_DATA();
-            uint devid = 1;
+            uint devid = 0;
             UInt32 last_error = 0;
-            while (true == SetupAPI.SetupDiEnumDeviceInterfaces(handle, GUID_DEVINTERFACE.DISK, devid, ref ifdata))
+            while (true == SetupAPI.SetupDiEnumDeviceInterfaces(handle, GUID_DEVINTERFACE.DISK, devid, ifdata))
             {
-                SP_DEVICE_INTERFACE_DETAIL_DATA ifdetail = new SP_DEVICE_INTERFACE_DETAIL_DATA();
-                UInt32 ret_size = 0;
-                bool ok = SetupAPI.SetupDiGetDeviceInterfaceDetail(handle, ref ifdata, ref ifdetail, ifdetail.cbSize, out ret_size, IntPtr.Zero);
+                SP_DEVICE_INTERFACE_DETAIL_DATA ifdetail = null;
+                bool ok = SetupAPI.SetupDiGetDeviceInterfaceDetail(handle, ifdata, out ifdetail);
                 if (ok)
                 {
-                    CAutoHandle device = Kernel32.CreateFile(ifdetail.DevicePath, ACCESS_TYPE.GENERIC_READ,
+                    CAutoHandle device = Kernel32.CreateFile(ifdetail.DevPath, ACCESS_TYPE.GENERIC_READ,
                                 FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
                                 FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
                     if (device.IsValid)
@@ -58,9 +57,14 @@ namespace EnumPhysicalDiskTest
                         if (true == IOCTL_STORAGE.GetDiskDeviceNumber(device, out devnum))
                         {
                             //"%s => \\\\?\\PhysicalDrive%d\n"
-                            string msg = $"Found disk \\\\.\\PhysicalDrive{devnum.DeviceNumber} from device [{ifdetail.DevicePath}]";
+                            string msg = $"Found disk \\\\.\\PhysicalDrive{devnum.DeviceNumber} from device [{ifdetail.DevPath}]\r\n";
                             textBox1.SetText(msg);
                         }
+                    }
+                    else
+                    {
+                        last_error = Kernel32.GetLastError();
+                        textBox1.SetText($"CreateFile LastError={last_error}\r\n");
                     }
                 }
                 else 
@@ -70,7 +74,8 @@ namespace EnumPhysicalDiskTest
                 }
                 devid++;
             }
-            last_error = Kernel32.GetLastError();
+
+            handle.Dispose();
         }
     }
 }
