@@ -34,7 +34,7 @@ namespace SpcLibrary.DeviceIoControl
             ok = Kernel32.DeviceIoControl(device, GET_DEVICE_NUMBER, 
                                             null, 0, 
                                             buffer, (uint)buffer.Length, 
-                                            ref ret_size, IntPtr.Zero);
+                                            ref ret_size, null);
             if (ok)
             {
                 result = buffer.FromBytes<STORAGE_DEVICE_NUMBER>();

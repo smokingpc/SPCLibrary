@@ -3,29 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace SpcLibrary.Win32API
 {
-    // Please refer to struct OVERLAPPED which defined in <windows.h>
-    [StructLayout(LayoutKind.Sequential)]
-    public class Win32Overlapped
-    {
-        public IntPtr InternalLow;
-        public IntPtr InternalHigh;
-        public int OffsetLow;
-        public int OffsetHigh;
-        public IntPtr EventHandle;
-
-        public IntPtr Pointer
-        {
-            get 
-            {
-                if (IntPtr.Size == 4)
-                    return (IntPtr)OffsetLow;
-                long temp = OffsetHigh;
-                return new IntPtr((temp << 32) + OffsetLow);
-            }
-        }
-    }
-
-
     public static class Kernel32
     {
         #region ======== Misc ========
@@ -81,7 +58,7 @@ namespace SpcLibrary.Win32API
         {
             IntPtr read = IntPtr.Zero;
             IntPtr write = IntPtr.Zero;
-            bool ret = CreatePipe(out read, out write, attribute, size);
+            bool ret = CreatePipe(ref read, ref write, attribute, size);
 
             read_pipe = new CAutoHandle(read);
             write_pipe = new CAutoHandle(write);

@@ -9,11 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpcLibrary.Win32API", "SpcL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpcLibrary.Common", "SpcLibrary.Common\SpcLibrary.Common.csproj", "{D81E04F3-6E06-49A5-B214-449002AEF182}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumPhysicalDiskTest", "EnumPhysicalDiskTest\EnumPhysicalDiskTest.csproj", "{39DE29EA-39AB-40FA-B979-9895DF216E76}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UsageExample", "UsageExample", "{930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpcLibrary.DeviceIoControl", "SpcLibrary.DeviceIoControl\SpcLibrary.DeviceIoControl.csproj", "{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumPhysicalDiskTest", "UsageExample\EnumPhysicalDiskTest\EnumPhysicalDiskTest.csproj", "{39DE29EA-39AB-40FA-B979-9895DF216E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitAndFormatPhysicalDisk", "UsageExample\InitAndFormatPhysicalDisk\InitAndFormatPhysicalDisk.csproj", "{D0A3462D-53CC-4484-A772-0B61CB8E2B5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,20 +35,25 @@ Global
 		{D81E04F3-6E06-49A5-B214-449002AEF182}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81E04F3-6E06-49A5-B214-449002AEF182}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81E04F3-6E06-49A5-B214-449002AEF182}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E83F6BD-9ED9-4658-BD49-5CA13CA0D0A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DE29EA-39AB-40FA-B979-9895DF216E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{39DE29EA-39AB-40FA-B979-9895DF216E76} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
+		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96B31948-C526-4D9F-9224-5D111B3AF0C2}

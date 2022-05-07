@@ -36,6 +36,9 @@ namespace EnumPhysicalDiskTest
             // 
             // textBox1
             // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(12, 58);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -59,13 +62,13 @@ namespace EnumPhysicalDiskTest
             this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(187, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(821, 35);
+            this.label1.Size = new System.Drawing.Size(661, 27);
             this.label1.TabIndex = 2;
             this.label1.Text = "To enum physical disks correctly, please run this app as Administrator !!";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 33F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1346, 598);
             this.Controls.Add(this.label1);

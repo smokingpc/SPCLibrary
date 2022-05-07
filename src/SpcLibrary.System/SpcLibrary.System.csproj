@@ -51,7 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SpcLibrary.Win32API\SpcLibrary.Win32API.csproj">
       <Project>{a04bcfa3-c191-41dd-b70e-115e26425eb2}</Project>
-      <Name>Win32API</Name>
+      <Name>SpcLibrary.Win32API</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

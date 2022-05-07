@@ -57,7 +57,7 @@ namespace EnumPhysicalDiskTest
                         if (true == IOCTL_STORAGE.GetDiskDeviceNumber(device, out devnum))
                         {
                             //"%s => \\\\?\\PhysicalDrive%d\n"
-                            string msg = $"Found disk \\\\.\\PhysicalDrive{devnum.DeviceNumber} from device [{ifdetail.DevPath}]\r\n";
+                            string msg = $"Found disk \\\\.\\PhysicalDrive{devnum.DeviceNumber}\r\n=>from device [{ifdetail.DevPath}]\r\n\r\n";
                             textBox1.SetText(msg);
                         }
                     }

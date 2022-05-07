@@ -30,7 +30,7 @@ namespace SpcLibrary.Win32API
 
 
     #region ======== Callback Delegates for Win32API ========
-    public delegate void DelegateIOCompletion(uint errorCode, uint numBytes, OVERLAPPED pOVERLAP);
+    public delegate void DelegateIOCompletion(uint errorCode, uint numBytes, Win32Overlapped pOVERLAP);
     #endregion
 
     #region ======== Structures for Win32API ========
@@ -59,16 +59,27 @@ namespace SpcLibrary.Win32API
         }
     }
 
+    // Please refer to struct OVERLAPPED which defined in <windows.h>
+    [StructLayout(LayoutKind.Sequential)]
+    public class Win32Overlapped
+    {
+        public IntPtr InternalLow;
+        public IntPtr InternalHigh;
+        public int OffsetLow;
+        public int OffsetHigh;
+        public IntPtr EventHandle;
 
-    //[StructLayout(LayoutKind.Sequential)]
-    //public class OVERLAPPED
-    //{
-    //    public int Internal;
-    //    public int InternalHigh;
-    //    public int Offset;
-    //    public int OffsetHigh;
-    //    public int hEvent;
-    //}
+        public IntPtr Pointer
+        {
+            get
+            {
+                if (IntPtr.Size == 4)
+                    return (IntPtr)OffsetLow;
+                long temp = OffsetHigh;
+                return new IntPtr((temp << 32) + OffsetLow);
+            }
+        }
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public class SECURITY_ATTRIBUTES
