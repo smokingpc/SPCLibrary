@@ -35,6 +35,7 @@ namespace InitAndFormatPhysicalDisk
             this.btnClean = new System.Windows.Forms.Button();
             this.btnInit = new System.Windows.Forms.Button();
             this.btnFormat = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -83,6 +84,7 @@ namespace InitAndFormatPhysicalDisk
             this.btnInit.TabIndex = 2;
             this.btnInit.Text = "Init Disk";
             this.btnInit.UseVisualStyleBackColor = true;
+            this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
             // 
             // btnFormat
             // 
@@ -92,12 +94,23 @@ namespace InitAndFormatPhysicalDisk
             this.btnFormat.TabIndex = 2;
             this.btnFormat.Text = "Format";
             this.btnFormat.UseVisualStyleBackColor = true;
+            this.btnFormat.Click += new System.EventHandler(this.btnFormat_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 84);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(798, 335);
+            this.textBox1.TabIndex = 3;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 85);
+            this.ClientSize = new System.Drawing.Size(820, 431);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnFormat);
             this.Controls.Add(this.btnInit);
             this.Controls.Add(this.btnClean);
@@ -124,6 +137,7 @@ namespace InitAndFormatPhysicalDisk
         private System.Windows.Forms.Button btnClean;
         private System.Windows.Forms.Button btnInit;
         private System.Windows.Forms.Button btnFormat;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

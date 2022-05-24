@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpcLibrary.Common.UI;
 using SpcLibrary.Win32API;
 using SpcLibrary.DeviceIoControl;
 
@@ -71,6 +72,27 @@ namespace InitAndFormatPhysicalDisk
             handle.Dispose();
 
             return ret.ToArray();
+        }
+
+        public void ShowDiskCapacity(CPhyDisk disk)
+        {
+            CAutoHandle handle = Kernel32.CreateFile(
+                        disk.DiskDevName, ACCESS_TYPE.GENERIC_READ, 
+                        FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
+                        FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
+            if (handle.IsValid)
+            {
+                STORAGE_READ_CAPACITY result = null;
+                bool ok = IOCTL_STORAGE.GetDiskCapacity(handle, out result);
+                if (ok)
+                { 
+                    
+                }
+                else
+                {
+                    textBox1.SetText($"[{disk.DiskDevName}]Read Disk Capacity Failed....\r\n");
+                }
+            }
         }
     }
 

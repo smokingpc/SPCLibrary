@@ -56,14 +56,27 @@ namespace InitAndFormatPhysicalDisk
         {
             CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
             if (null != disk)
+            {
                 ShowDevPath(disk);
+            }
         }
 
         private void btnClean_Click(object sender, EventArgs e)
         {
+            return;
             CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
             if (null != disk)
                 CleanupDisk(disk);
+        }
+
+        private void btnInit_Click(object sender, EventArgs e)
+        {
+            return;
+        }
+
+        private void btnFormat_Click(object sender, EventArgs e)
+        {
+            return;
         }
     }
 }
