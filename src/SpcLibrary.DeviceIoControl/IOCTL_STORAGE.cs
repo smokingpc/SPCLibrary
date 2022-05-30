@@ -77,8 +77,10 @@ namespace SpcLibrary.DeviceIoControl
         public Guid PartitionType = Guid.Empty;
         public Guid PartitionId = Guid.Empty;
         public UInt64 Attributes = 0;
-//how to map fixed C++ string?
-        public StringBuilder Name = StringBuilder(36);
+        //how to map fixed C++ string?
+        public char[] NameRaw;
+        public string Name { get { return new string(NameRaw); } }
+        //public StringBuilder Name = StringBuilder(36);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -114,32 +116,43 @@ namespace SpcLibrary.DeviceIoControl
         [FieldOffset(20)]
         public UInt32 PartitionNumber = 0;
         [FieldOffset(24)]
-        byte RewritePartitionRaw = 0;
+        public byte RewritePartitionRaw = 0;
         [FieldOffset(25)]
-        byte IsServicePartitionRaw = 0;
+        public byte IsServicePartitionRaw = 0;
         [FieldOffset(26)]
-        DRIVE_LAYOUT_INFORMATION_MBR MBR;
+        public DRIVE_LAYOUT_INFORMATION_MBR MBR;
         [FieldOffset(26)]
-        DRIVE_LAYOUT_INFORMATION_GPT GPT;
+        public DRIVE_LAYOUT_INFORMATION_GPT GPT;
 
-        bool RewritePartition { get { return Convert.ToBoolean(RewritePartitionRaw); } }
-        bool IsServicePartition { get { return Convert.ToBoolean(IsServicePartitionRaw); } }
+        public bool RewritePartition { get { return Convert.ToBoolean(RewritePartitionRaw); } }
+        public bool IsServicePartition { get { return Convert.ToBoolean(IsServicePartitionRaw); } }
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public class DRIVE_LAYOUT_INFORMATION_EX
+    public class DRIVE_LAYOUT_INFORMATION_EX_HEADER
     {
         [FieldOffset(0)]
         public PARTITION_STYLE PartitionStyle;
         [FieldOffset(4)]
         public UInt32 PartitionCount;
         [FieldOffset(8)]
-        DRIVE_LAYOUT_INFORMATION_MBR MBR;
+        public DRIVE_LAYOUT_INFORMATION_MBR MBR;
         [FieldOffset(8)]
-        DRIVE_LAYOUT_INFORMATION_GPT GPT;
+        public DRIVE_LAYOUT_INFORMATION_GPT GPT;
+        
+        //C++裡這邊後面接著不定長度 PARTITION_INFORMATION_EX[] 陣列，這在C#實在難辦。
+        //只好拆成header，後面不定長度的資料分開parse....
+        //PARTITION_INFORMATION_EX Partition[];   //how to map variable length array from C++?
+    }
 
-        [FieldOffset(DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes + 8)]
-        PARTITION_INFORMATION_EX Partition[];   //how to map variable length array from C++?
+    public class DRIVE_LAYOUT_INFORMATION_EX 
+    {
+        public PARTITION_STYLE PartitionStyle;
+        public UInt32 PartitionCount;
+        public DRIVE_LAYOUT_INFORMATION_MBR MBR;
+        public DRIVE_LAYOUT_INFORMATION_GPT GPT;
+        public DRIVE_LAYOUT_INFORMATION_EX() { }
+        public DRIVE_LAYOUT_INFORMATION_EX(IntPtr ptr) { }
     }
 
     public static class IOCTL_STORAGE 

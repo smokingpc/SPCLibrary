@@ -63,7 +63,6 @@ namespace InitAndFormatPhysicalDisk
 
         private void btnClean_Click(object sender, EventArgs e)
         {
-            return;
             CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
             if (null != disk)
                 CleanupDisk(disk);

@@ -85,8 +85,8 @@ namespace InitAndFormatPhysicalDisk
                 STORAGE_READ_CAPACITY result = null;
                 bool ok = IOCTL_STORAGE.GetDiskCapacity(handle, out result);
                 if (ok)
-                { 
-                    
+                {
+                    textBox1.SetText($"BlockSize={result.BlockLength}, NumberOfBlock={result.NumberOfBlocks}, TotalSize={result.DiskLength/1048576} MB\r\n");
                 }
                 else
                 {
