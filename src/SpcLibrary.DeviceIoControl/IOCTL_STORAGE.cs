@@ -80,7 +80,6 @@ namespace SpcLibrary.DeviceIoControl
         //how to map fixed C++ string?
         public char[] NameRaw;
         public string Name { get { return new string(NameRaw); } }
-        //public StringBuilder Name = StringBuilder(36);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -131,6 +130,7 @@ namespace SpcLibrary.DeviceIoControl
     [StructLayout(LayoutKind.Explicit)]
     public class DRIVE_LAYOUT_INFORMATION_EX_HEADER
     {
+        public const int SizeInBytes = 8 + DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes;
         [FieldOffset(0)]
         public PARTITION_STYLE PartitionStyle;
         [FieldOffset(4)]
@@ -145,14 +145,24 @@ namespace SpcLibrary.DeviceIoControl
         //PARTITION_INFORMATION_EX Partition[];   //how to map variable length array from C++?
     }
 
-    public class DRIVE_LAYOUT_INFORMATION_EX 
+//    [StructLayout(LayoutKind.Explicit)]
+    public class DRIVE_LAYOUT_INFORMATION_EX
     {
-        public PARTITION_STYLE PartitionStyle;
-        public UInt32 PartitionCount;
-        public DRIVE_LAYOUT_INFORMATION_MBR MBR;
-        public DRIVE_LAYOUT_INFORMATION_GPT GPT;
+//        [FieldOffset(0)]
+        DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = new DRIVE_LAYOUT_INFORMATION_EX_HEADER();
+        List<PARTITION_INFORMATION_EX> Partitions = new List<PARTITION_INFORMATION_EX>();
+        //[FieldOffset(DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes)]
+
+
         public DRIVE_LAYOUT_INFORMATION_EX() { }
-        public DRIVE_LAYOUT_INFORMATION_EX(IntPtr ptr) { }
+        public DRIVE_LAYOUT_INFORMATION_EX(IntPtr ptr)
+            :this()
+        {
+        }
+        public DRIVE_LAYOUT_INFORMATION_EX(byte[] buffer)
+            : this()
+        {
+        }
     }
 
     public static class IOCTL_STORAGE 
@@ -180,6 +190,16 @@ namespace SpcLibrary.DeviceIoControl
             }
             return ok;
         }
+        public static bool GetDiskDeviceNumber(string devpath, out STORAGE_DEVICE_NUMBER result)
+        {
+            //devpath is DevicePathName of Disk
+            //e.g. : "\\?\scsi#disk&ven_intel&prod_ssdsc2bw240a4#4&6dd29aa&0&050000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b}"
+            CAutoHandle device = Kernel32.CreateFile(devpath, ACCESS_TYPE.GENERIC_READ,
+                    FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
+                    FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
+
+            return GetDiskDeviceNumber(device, out result);
+        }
         public static bool GetDiskCapacity(CAutoHandle device, out STORAGE_READ_CAPACITY result)
         {
             bool ok = false;
@@ -198,6 +218,36 @@ namespace SpcLibrary.DeviceIoControl
                 result = buffer.FromBytes<STORAGE_READ_CAPACITY>();
             }
             return ok;
+        }
+        public static bool GetDiskCapacity(string diskname, out STORAGE_READ_CAPACITY result)
+        {
+            //diskname is PhysicalDisk DeviceName
+            //e.g. : "\\.\PhysicalDrive2"
+            CAutoHandle device = Kernel32.CreateFile(diskname, ACCESS_TYPE.GENERIC_READ,
+                    FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
+                    FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
+
+            return GetDiskCapacity(device, out result);
+        }
+
+        public static bool GetDiskPartitions(CAutoHandle device, out DRIVE_LAYOUT_INFORMATION_EX result)
+        {
+            //IOCTL_DISK_GET_DRIVE_LAYOUT_EX 
+            result = new DRIVE_LAYOUT_INFORMATION_EX();
+            if(device.IsInvalid)
+                return false;
+
+            return true;
+        }
+        public static bool GetDiskPartitions(string diskname, out DRIVE_LAYOUT_INFORMATION_EX result) 
+        {
+            //diskname is PhysicalDisk DeviceName
+            //e.g. : "\\.\PhysicalDrive2"
+            CAutoHandle device = Kernel32.CreateFile(diskname, ACCESS_TYPE.GENERIC_READ,
+                    FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
+                    FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
+
+            return GetDiskPartitions(device, out result);
         }
     }
 }
