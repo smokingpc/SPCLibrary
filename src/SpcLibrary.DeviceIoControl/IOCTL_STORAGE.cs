@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,11 @@ namespace SpcLibrary.DeviceIoControl
 {
     public enum PARTITION_STYLE : UInt32
     {
+        [Description("MBR")]
         MBR = 0,
+        [Description("GPT")]
         GPT = 1,
+        [Description("RAW")]
         RAW = 2,
     }
 
@@ -132,9 +136,9 @@ namespace SpcLibrary.DeviceIoControl
     {
         public const int SizeInBytes = 8 + DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes;
         [FieldOffset(0)]
-        public PARTITION_STYLE PartitionStyle;
+        public PARTITION_STYLE Style;   //PartitionStyle
         [FieldOffset(4)]
-        public UInt32 PartitionCount;
+        public UInt32 Count;        //PartitionCount
         [FieldOffset(8)]
         public DRIVE_LAYOUT_INFORMATION_MBR MBR;
         [FieldOffset(8)]
@@ -149,8 +153,8 @@ namespace SpcLibrary.DeviceIoControl
     public class DRIVE_LAYOUT_INFORMATION_EX
     {
 //        [FieldOffset(0)]
-        DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = new DRIVE_LAYOUT_INFORMATION_EX_HEADER();
-        List<PARTITION_INFORMATION_EX> Partitions = new List<PARTITION_INFORMATION_EX>();
+        public DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = new DRIVE_LAYOUT_INFORMATION_EX_HEADER();
+        public List<PARTITION_INFORMATION_EX> Partitions = new List<PARTITION_INFORMATION_EX>();
         //[FieldOffset(DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes)]
 
 
@@ -236,6 +240,9 @@ namespace SpcLibrary.DeviceIoControl
             result = new DRIVE_LAYOUT_INFORMATION_EX();
             if(device.IsInvalid)
                 return false;
+
+
+
 
             return true;
         }

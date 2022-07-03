@@ -48,12 +48,14 @@ namespace EnumPartitionOnDisk
 
         private void cbDiskList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            textBox1.Text = "";
             CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
             if (null != disk)
             {
-                ReadPartitionInfo(disk);
+                PrintPartitionInfo(disk);
             }
-
+            if (textBox1.Text.Length == 0)
+                textBox1.Text = "Physical Disk not found...\r\n";
         }
     }
 }

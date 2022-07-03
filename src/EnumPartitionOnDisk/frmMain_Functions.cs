@@ -39,7 +39,7 @@ namespace EnumPartitionOnDisk
                         {
                             CPhyDisk found = new CPhyDisk();
                             found.DevPath = ifdetail.DevPath;
-                            found.DiskDevName = $"\\\\.\\PhysicalDrive{devnum.DeviceNumber}";
+                            found.PhyDiskName = $"\\\\.\\PhysicalDrive{devnum.DeviceNumber}";
                             ret.Add(found);
                         }
                     }
@@ -52,9 +52,45 @@ namespace EnumPartitionOnDisk
             return ret.ToArray();
         }
 
-        //diskname => physical disk name. e.g.: "\\.\PhysicalDrive2"
-        public void ReadPartitionInfo(CPhyDisk disk)
+        private void PrintHeader(DRIVE_LAYOUT_INFORMATION_GPT gpt)
         { 
+            string msg = $"Disk[{gpt.DiskId.ToString()}], Max [{gpt.MaxPartitionCount}] Paritions, UsableOffset[{gpt.StartingUsableOffset}], UsableLength[{gpt.UsableLength}]\r\n";
+            textBox1.SetText(msg);
+        }
+        private void PrintHeader(DRIVE_LAYOUT_INFORMATION_MBR mbr)
+        {
+            string msg = $"Signature [{mbr.Signature.ToString("X8")}], Checksum [{mbr.CheckSum.ToString("X8")}]\r\n";
+            textBox1.SetText(msg);
+        }
+
+        private void PrintPartitions(List<PARTITION_INFORMATION_EX> list)
+        { }
+
+        //diskname => physical disk name. e.g.: "\\.\PhysicalDrive2"
+        public void PrintPartitionInfo(CPhyDisk disk)
+        {
+            textBox1.SetText($"[{disk.PhyDiskName}]\r\n");
+            DRIVE_LAYOUT_INFORMATION_EX result = null;
+            IOCTL_STORAGE.GetDiskPartitions(disk.PhyDiskName, out result);
+            string msg = "";
+            msg = $"Disk contains {result.Header.Count} [{result.Header.Style}] Partitions\r\n";
+            textBox1.SetText(msg);
+
+            if (result.Header.Style == PARTITION_STYLE.GPT)
+            {
+                PrintHeader(result.Header.GPT);
+            }
+            else if (result.Header.Style == PARTITION_STYLE.MBR)
+            {
+                PrintHeader(result.Header.MBR);
+            }
+            else if (result.Header.Style == PARTITION_STYLE.RAW)
+            {
+                msg = $"Raw Partition, no additional information.\r\n";
+            }
+            textBox1.SetText(msg);
+
+            PrintPartitions(result.Partitions);
         }
     }
 
@@ -63,7 +99,6 @@ namespace EnumPartitionOnDisk
         //Parent Controller Device Path, e.g. "\\?\scsi#disk&ven_intel&prod_ssdsc2bw240a4#4&6dd29aa&0&050000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b}"
         public string DevPath { get; set; }
         //DevName of PhysicalDisk, e.g.  "\\.\PhysicalDrive2"
-        public string DiskDevName { get; set; }
+        public string PhyDiskName { get; set; }
     }
-
 }
