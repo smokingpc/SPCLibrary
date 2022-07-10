@@ -91,6 +91,10 @@
       <Project>{5e83f6bd-9ed9-4658-bd49-5ca13ca0d0a0}</Project>
       <Name>SpcLibrary.DeviceIoControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SpcLibrary.System\SpcLibrary.System.csproj">
+      <Project>{b497c6a7-7d81-4dbb-bbb1-6ae36a4181d9}</Project>
+      <Name>SpcLibrary.System</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpcLibrary.Win32API\SpcLibrary.Win32API.csproj">
       <Project>{a04bcfa3-c191-41dd-b70e-115e26425eb2}</Project>
       <Name>SpcLibrary.Win32API</Name>

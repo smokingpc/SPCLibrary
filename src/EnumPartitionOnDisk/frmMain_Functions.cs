@@ -64,7 +64,28 @@ namespace EnumPartitionOnDisk
         }
 
         private void PrintPartitions(List<PARTITION_INFORMATION_EX> list)
-        { }
+        {
+            foreach (var item in list)
+            {
+                string msg = "";
+                msg = $"  [Partition{item.PartitionStyle}]\r\n";
+                msg += $"  Type={item.PartitionStyle}, Service Partition={item.IsServicePartition}\r\n";
+                msg += $"  Start={item.StartingOffset} & Length={item.PartitionLength}\r\n";
+
+                switch (item.PartitionStyle)
+                {
+                    case PARTITION_STYLE.MBR:
+                        msg += $"Signature [{item.MBR.Signature.ToString("X8")}], Checksum [{item.MBR.CheckSum.ToString("X8")}]\r\n";
+                        break;
+                    case PARTITION_STYLE.GPT:
+                        msg += $"Partition {item.GPT.DiskId.ToString()}]\r\n";
+                        msg += $"Max [{item.GPT.MaxPartitionCount}] Paritions\r\n";
+                        msg += $"UsableOffset[{item.GPT.StartingUsableOffset}], UsableLength[{item.GPT.UsableLength}]\r\n";
+                        break;
+                }
+                textBox1.SetText(msg);
+            }
+        }
 
         //diskname => physical disk name. e.g.: "\\.\PhysicalDrive2"
         public void PrintPartitionInfo(CPhyDisk disk)

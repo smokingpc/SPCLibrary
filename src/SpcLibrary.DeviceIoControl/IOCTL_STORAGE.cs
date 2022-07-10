@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -110,21 +110,23 @@ namespace SpcLibrary.DeviceIoControl
     [StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_EX
     {
+        public const int SizeInBytes = 32 + DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes;
+
         [FieldOffset(0)]
         public PARTITION_STYLE PartitionStyle;
-        [FieldOffset(4)]
+        [FieldOffset(8)]
         public Int64 StartingOffset = 0;
-        [FieldOffset(12)]
+        [FieldOffset(16)]
         public Int64 PartitionLength = 0;
-        [FieldOffset(20)]
-        public UInt32 PartitionNumber = 0;
         [FieldOffset(24)]
+        public UInt32 PartitionNumber = 0;
+        [FieldOffset(28)]
         public byte RewritePartitionRaw = 0;
-        [FieldOffset(25)]
+        [FieldOffset(29)]
         public byte IsServicePartitionRaw = 0;
-        [FieldOffset(26)]
+        [FieldOffset(32)]
         public DRIVE_LAYOUT_INFORMATION_MBR MBR;
-        [FieldOffset(26)]
+        [FieldOffset(32)]
         public DRIVE_LAYOUT_INFORMATION_GPT GPT;
 
         public bool RewritePartition { get { return Convert.ToBoolean(RewritePartitionRaw); } }
