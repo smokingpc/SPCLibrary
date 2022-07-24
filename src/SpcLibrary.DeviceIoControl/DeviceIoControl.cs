@@ -33,12 +33,9 @@ namespace SpcLibrary.DeviceIoControl
 
         public static UInt32 IOCTL_CODE(UInt32 device_type, UInt32 function, UInt32 method, UInt32 access)
         {
-            UInt32 result = (device_type << 16) | (access << 14) | (function << 2) | access;
+            UInt32 result = (device_type << 16) | (access << 14) | (function << 2) | method;
 
             return result;
         }
-
-
-
     }
 }

@@ -146,10 +146,52 @@ namespace SpcCommon.Common.Extension
                 //GCHandleType.Pinned 允許這個buffer做出來的handle直接取用底下的實體記憶體位置
                 //相當於允許直接使用底層的C指標
                 GCHandle handle = GCHandle.Alloc(map_buffer, GCHandleType.Pinned);
+                var test = handle.AddrOfPinnedObject();
                 result = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
 
                 //pin太久會造成C#的記憶體回收機制被打亂，所以趕緊用完趕緊釋放，不要一直占住不放
                 handle.Free();
+            }
+
+            return result;
+        }
+        public static T FromBytes<T>(this byte[] buffer, int offset, int t_size, bool copy = true)
+        {
+            T result = default(T);
+            if (buffer != null && (offset + t_size) <= buffer.Length)
+            {
+                byte[] map_buffer = null;
+                if (copy)
+                {
+                    map_buffer = new byte[t_size];
+                    Array.Copy(buffer, offset, map_buffer, 0, t_size);
+                }
+                else
+                    map_buffer = buffer;
+
+                //GCHandleType.Pinned 允許這個buffer做出來的handle直接取用底下的實體記憶體位置
+                //相當於允許直接使用底層的C指標
+                GCHandle handle = GCHandle.Alloc(map_buffer, GCHandleType.Pinned);
+                var test = handle.AddrOfPinnedObject();
+                result = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+
+                //pin太久會造成C#的記憶體回收機制被打亂，所以趕緊用完趕緊釋放，不要一直占住不放
+                handle.Free();
+            }
+
+            return result;
+        }
+
+        //count == how many entries in list should returned?
+        public static List<T> ArrayFromBytes<T>(this byte[] buffer, int offset, int count, bool copy = true)
+        {
+            //T result = default(T);
+            List<T> result = new List<T>();
+            int layout_size = Marshal.SizeOf<T>();
+
+            for (int i = 0; i < count; i++)
+            { 
+                
             }
 
             return result;

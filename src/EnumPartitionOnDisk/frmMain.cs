@@ -27,7 +27,7 @@ namespace EnumPartitionOnDisk
             try
             {
                 cbDiskList.Items.Clear();
-                cbDiskList.DisplayMember = "DiskDevName";
+                cbDiskList.DisplayMember = "PhyDiskName";
                 cbDiskList.Items.AddRange(EnumPhysicalDisks());
             }
             catch (Exception ex)

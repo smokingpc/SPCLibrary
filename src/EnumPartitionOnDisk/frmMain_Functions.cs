@@ -68,21 +68,23 @@ namespace EnumPartitionOnDisk
             foreach (var item in list)
             {
                 string msg = "";
-                msg = $"  [Partition{item.PartitionStyle}]\r\n";
+                msg = $"  [Partition {item.PartitionStyle}]\r\n";
                 msg += $"  Type={item.PartitionStyle}, Service Partition={item.IsServicePartition}\r\n";
                 msg += $"  Start={item.StartingOffset} & Length={item.PartitionLength}\r\n";
 
                 switch (item.PartitionStyle)
                 {
                     case PARTITION_STYLE.MBR:
-                        msg += $"Signature [{item.MBR.Signature.ToString("X8")}], Checksum [{item.MBR.CheckSum.ToString("X8")}]\r\n";
+                        msg += $"  Type[{item.MBR.PartitionType}], BootIndicator[{item.MBR.BootIndicator}], RecognizedPartition[{item.MBR.RecognizedPartition}], HiddenSectors[{item.MBR.HiddenSectors}]\r\n";
+                        msg += $"  PartitionId[{item.MBR.PartitionId.ToString()}]\r\n";
                         break;
                     case PARTITION_STYLE.GPT:
-                        msg += $"Partition {item.GPT.DiskId.ToString()}]\r\n";
-                        msg += $"Max [{item.GPT.MaxPartitionCount}] Paritions\r\n";
-                        msg += $"UsableOffset[{item.GPT.StartingUsableOffset}], UsableLength[{item.GPT.UsableLength}]\r\n";
+                        msg += $"  PartitionType[{item.GPT.PartitionType}], Attributes[{item.GPT.Attributes}]\r\n";
+                        //msg += $" Name[{item.GPT.Name}]\r\n";
                         break;
                 }
+
+                msg += "\r\n";
                 textBox1.SetText(msg);
             }
         }
@@ -92,26 +94,35 @@ namespace EnumPartitionOnDisk
         {
             textBox1.SetText($"[{disk.PhyDiskName}]\r\n");
             DRIVE_LAYOUT_INFORMATION_EX result = null;
-            IOCTL_STORAGE.GetDiskPartitions(disk.PhyDiskName, out result);
+            bool ok = IOCTL_STORAGE.GetDiskPartitions(disk.PhyDiskName, out result);
             string msg = "";
-            msg = $"Disk contains {result.Header.Count} [{result.Header.Style}] Partitions\r\n";
-            textBox1.SetText(msg);
 
-            if (result.Header.Style == PARTITION_STYLE.GPT)
-            {
-                PrintHeader(result.Header.GPT);
-            }
-            else if (result.Header.Style == PARTITION_STYLE.MBR)
-            {
-                PrintHeader(result.Header.MBR);
-            }
-            else if (result.Header.Style == PARTITION_STYLE.RAW)
-            {
-                msg = $"Raw Partition, no additional information.\r\n";
-            }
+            if (ok)
+                msg = $"Disk contains {result.Header.Count} [{result.Header.Style}] Partitions\r\n";
+            else
+                msg = $"Failed to get partitions for {disk.PhyDiskName}, skip it...\r\n";
             textBox1.SetText(msg);
+            msg = "";
 
-            PrintPartitions(result.Partitions);
+            if (ok)
+            {
+                if (result.Header.Style == PARTITION_STYLE.GPT)
+                {
+                    PrintHeader(result.Header.GPT);
+                }
+                else if (result.Header.Style == PARTITION_STYLE.MBR)
+                {
+                    PrintHeader(result.Header.MBR);
+                }
+                else if (result.Header.Style == PARTITION_STYLE.RAW)
+                {
+                    msg = $"Raw Partition, no additional information.\r\n";
+                    textBox1.SetText(msg);
+                }
+
+                msg = "";
+                PrintPartitions(result.Partitions);
+            }
         }
     }
 

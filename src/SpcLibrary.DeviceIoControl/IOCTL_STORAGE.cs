@@ -57,33 +57,39 @@ namespace SpcLibrary.DeviceIoControl
         }
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    //[StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_MBR
     {
+    //actual size of C++ structure...
         public const int SizeInBytes = 24;
-        [FieldOffset(0)]
+        //[FieldOffset(0)]
         public byte PartitionType = 0;
-        [FieldOffset(1)]
+        //[FieldOffset(1)]
         public byte BootIndicator = 0;
-        [FieldOffset(2)]
+        //[FieldOffset(2)]
         public byte RecognizedPartition = 0;
-        [FieldOffset(3)]
+        //[FieldOffset(3)]
         public byte Padding1;
-        [FieldOffset(4)]
+        //[FieldOffset(4)]
         public UInt32 HiddenSectors = 0;
-        [FieldOffset(8)]
+        //[FieldOffset(8)]
         public Guid PartitionId = Guid.Empty;
+
+        public PARTITION_INFORMATION_MBR(byte[] buffer)
+        { }
     }
-    [StructLayout(LayoutKind.Sequential)]
+    //[StructLayout(LayoutKind.Sequential)]
     public class PARTITION_INFORMATION_GPT
     {
+        //actual size of C++ structure...
         public const int SizeInBytes = 112;
         public Guid PartitionType = Guid.Empty;
         public Guid PartitionId = Guid.Empty;
         public UInt64 Attributes = 0;
-        //how to map fixed C++ string?
-        public char[] NameRaw;
-        public string Name { get { return new string(NameRaw); } }
+        public string Name = "";
+
+        public PARTITION_INFORMATION_GPT(byte[] buffer)
+        { }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -107,30 +113,34 @@ namespace SpcLibrary.DeviceIoControl
         public UInt32 MaxPartitionCount = 0;
         //4 bytes alignment padding
     }
-    [StructLayout(LayoutKind.Explicit)]
+    //[StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_EX
     {
-        public const int SizeInBytes = 32 + DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes;
+        public const int HeaderSizeInBytes = 32;//+ PARTITION_INFORMATION_GPT.SizeInBytes;
+        public const int SizeInBytes = HeaderSizeInBytes + PARTITION_INFORMATION_GPT.SizeInBytes;
 
-        [FieldOffset(0)]
+        //[FieldOffset(0)]
         public PARTITION_STYLE PartitionStyle;
-        [FieldOffset(8)]
+        //[FieldOffset(8)]
         public Int64 StartingOffset = 0;
-        [FieldOffset(16)]
+        //[FieldOffset(16)]
         public Int64 PartitionLength = 0;
-        [FieldOffset(24)]
+        //[FieldOffset(24)]
         public UInt32 PartitionNumber = 0;
-        [FieldOffset(28)]
+        //[FieldOffset(28)]
         public byte RewritePartitionRaw = 0;
-        [FieldOffset(29)]
+        //[FieldOffset(29)]
         public byte IsServicePartitionRaw = 0;
-        [FieldOffset(32)]
-        public DRIVE_LAYOUT_INFORMATION_MBR MBR;
-        [FieldOffset(32)]
-        public DRIVE_LAYOUT_INFORMATION_GPT GPT;
+        //[FieldOffset(32)]
+        public PARTITION_INFORMATION_MBR MBR;
+        //[FieldOffset(32)]
+        public PARTITION_INFORMATION_GPT GPT;
 
         public bool RewritePartition { get { return Convert.ToBoolean(RewritePartitionRaw); } }
         public bool IsServicePartition { get { return Convert.ToBoolean(IsServicePartitionRaw); } }
+
+        public PARTITION_INFORMATION_EX(byte[] buffer)
+        { }
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -148,35 +158,39 @@ namespace SpcLibrary.DeviceIoControl
         
         //C++裡這邊後面接著不定長度 PARTITION_INFORMATION_EX[] 陣列，這在C#實在難辦。
         //只好拆成header，後面不定長度的資料分開parse....
-        //PARTITION_INFORMATION_EX Partition[];   //how to map variable length array from C++?
     }
 
-//    [StructLayout(LayoutKind.Explicit)]
     public class DRIVE_LAYOUT_INFORMATION_EX
     {
-//        [FieldOffset(0)]
-        public DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = new DRIVE_LAYOUT_INFORMATION_EX_HEADER();
+        public DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = null;
         public List<PARTITION_INFORMATION_EX> Partitions = new List<PARTITION_INFORMATION_EX>();
-        //[FieldOffset(DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes)]
-
-
-        public DRIVE_LAYOUT_INFORMATION_EX() { }
-        public DRIVE_LAYOUT_INFORMATION_EX(IntPtr ptr)
-            :this()
-        {
-        }
         public DRIVE_LAYOUT_INFORMATION_EX(byte[] buffer)
-            : this()
         {
+            this.Header = buffer.FromBytes<DRIVE_LAYOUT_INFORMATION_EX_HEADER>();
+            if (this.Header != null && this.Header.Count > 0)
+            { 
+                int offset = DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes;
+                int size = PARTITION_INFORMATION_EX.SizeInBytes;
+                for (int i = 0; i < this.Header.Count; i++)
+                {
+                    offset += PARTITION_INFORMATION_EX.SizeInBytes * i;
+                    PARTITION_INFORMATION_EX found = 
+                        buffer.FromBytes<PARTITION_INFORMATION_EX>(offset, size);
+                    this.Partitions.Add(found);
+                }
+            }
+
         }
     }
 
     public static class IOCTL_STORAGE 
     {
         public const UInt32 IOCTL_STORAGE_BASE = (UInt32) DEVICE_TYPE.MASS_STORAGE;
+        public const UInt32 FILE_DEVICE_DISK = (UInt32)DEVICE_TYPE.DISK;
+        public const UInt32 IOCTL_DISK_BASE = FILE_DEVICE_DISK;
         public static readonly UInt32 GET_DEVICE_NUMBER = DevIoCtl.IOCTL_CODE(IOCTL_STORAGE_BASE, 0x0420, (int)IO_METHOD.BUFFERED, (int)IO_ACCESS.ANY_ACCESS);
         public static readonly UInt32 READ_CAPACITY = DevIoCtl.IOCTL_CODE(IOCTL_STORAGE_BASE, 0x0450, (int)IO_METHOD.BUFFERED, (int)IO_ACCESS.READ_ACCESS);
-
+        public static readonly UInt32 IOCTL_DISK_GET_DRIVE_LAYOUT_EX = DevIoCtl.IOCTL_CODE(IOCTL_DISK_BASE, 0x0014, (int)IO_METHOD.BUFFERED, (int)IO_ACCESS.ANY_ACCESS);
         public static bool GetDiskDeviceNumber(CAutoHandle device, out STORAGE_DEVICE_NUMBER result) 
         {
             bool ok = false;
@@ -239,14 +253,24 @@ namespace SpcLibrary.DeviceIoControl
         public static bool GetDiskPartitions(CAutoHandle device, out DRIVE_LAYOUT_INFORMATION_EX result)
         {
             //IOCTL_DISK_GET_DRIVE_LAYOUT_EX 
-            result = new DRIVE_LAYOUT_INFORMATION_EX();
+            int error = 0;
+            UInt32 ret_size = 0;
+            result = null;//new DRIVE_LAYOUT_INFORMATION_EX();
             if(device.IsInvalid)
                 return false;
 
-
-
-
-            return true;
+            byte[] buffer = new byte[1048576];
+            bool ok = Kernel32.DeviceIoControl(device, IOCTL_DISK_GET_DRIVE_LAYOUT_EX,
+                                            null, 0,
+                                            buffer, (uint)buffer.Length,
+                                            ref ret_size, null);
+            if (ok)
+            {
+                result = new DRIVE_LAYOUT_INFORMATION_EX(buffer);
+            }
+            else
+                error = Marshal.GetLastWin32Error();
+            return ok;
         }
         public static bool GetDiskPartitions(string diskname, out DRIVE_LAYOUT_INFORMATION_EX result) 
         {
