@@ -43,7 +43,7 @@ namespace InitAndFormatPhysicalDisk
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 19);
+            this.label1.Size = new System.Drawing.Size(77, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "Disk List";
             // 
@@ -51,9 +51,9 @@ namespace InitAndFormatPhysicalDisk
             // 
             this.cbDiskList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDiskList.FormattingEnabled = true;
-            this.cbDiskList.Location = new System.Drawing.Point(82, 12);
+            this.cbDiskList.Location = new System.Drawing.Point(90, 12);
             this.cbDiskList.Name = "cbDiskList";
-            this.cbDiskList.Size = new System.Drawing.Size(295, 27);
+            this.cbDiskList.Size = new System.Drawing.Size(287, 32);
             this.cbDiskList.TabIndex = 1;
             this.cbDiskList.SelectedIndexChanged += new System.EventHandler(this.cbDiskList_SelectedIndexChanged);
             // 
@@ -62,7 +62,7 @@ namespace InitAndFormatPhysicalDisk
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 49);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(232, 19);
+            this.label2.Size = new System.Drawing.Size(289, 24);
             this.label2.TabIndex = 0;
             this.label2.Text = "(Please Select PhysicalDisk First!!)";
             // 
@@ -107,7 +107,7 @@ namespace InitAndFormatPhysicalDisk
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 431);
             this.Controls.Add(this.textBox1);

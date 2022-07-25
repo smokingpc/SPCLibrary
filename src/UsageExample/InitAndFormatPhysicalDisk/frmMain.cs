@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SpcLibrary.DeviceIoControl;
 
 namespace InitAndFormatPhysicalDisk
 {
@@ -70,11 +71,18 @@ namespace InitAndFormatPhysicalDisk
 
         private void btnInit_Click(object sender, EventArgs e)
         {
+            CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
+            if (null != disk)
+                InitDisk(disk, PARTITION_STYLE.GPT);
             return;
         }
 
         private void btnFormat_Click(object sender, EventArgs e)
         {
+            CPhyDisk disk = (CPhyDisk)cbDiskList.SelectedItem;
+            if (null != disk)
+                FormatEntireDisk(disk);
+                //InitDisk(disk, PARTITION_STYLE.GPT);
             return;
         }
     }

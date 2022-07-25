@@ -74,6 +74,25 @@ namespace InitAndFormatPhysicalDisk
             return ret.ToArray();
         }
 
+        public void InitDisk(CPhyDisk disk, PARTITION_STYLE type)
+        { 
+            //init disk to gpt or mbr disk
+        }
+
+        public void CreatePartition(CPhyDisk disk, PARTITION_STYLE type, UInt64 start_offset, UInt64 length)
+        { }
+        public void FormatPartition()
+        {
+            throw new Exception("not implemented");
+        }
+
+        public void FormatEntireDisk(CPhyDisk disk)
+        {
+            InitDisk(disk, PARTITION_STYLE.GPT);
+            //CreatePartition(disk, PARTITION_STYLE.GPT);
+            //FormatPartition();
+        }
+
         public void ShowDiskCapacity(CPhyDisk disk)
         {
             CAutoHandle handle = Kernel32.CreateFile(
