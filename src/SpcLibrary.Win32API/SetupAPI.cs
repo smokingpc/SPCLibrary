@@ -57,12 +57,13 @@ namespace SpcLibrary.Win32API
         public IntPtr Reserved = IntPtr.Zero;
     }
 
-    //[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public class SP_DEVICE_INTERFACE_DETAIL_DATA
     {
         //cbSize should be set to sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
         //refer to SP_DEVICE_INTERFACE_DETAIL_DATA_W definition in SetupAPI.h 
         public int cbSize = sizeof(int) + sizeof(char);
+        [MarshalAs(UnmanagedType.LPWStr)]
         public string DevPath = "";
 
         public SP_DEVICE_INTERFACE_DETAIL_DATA() 
@@ -119,7 +120,6 @@ namespace SpcLibrary.Win32API
             {
                 if (this.IsValid)
                 {
-                    //Kernel32.CloseHandle(Handle);
                     SetupAPI.SetupDiDestroyDeviceInfoList(Handle);
                     Handle = IntPtr.Zero;
                 }
