@@ -57,129 +57,189 @@ namespace SpcLibrary.DeviceIoControl
         }
     }
 
-    //[StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_MBR
     {
+        //[PARTITION_INFORMATION_MBR]
+        //PartitionType(0)
+        //BootIndicator(1)
+        //RecognizedPartition(2)
+        //HiddenSectors(4)
+        //PartitionId(8)
     //actual size of C++ structure...
         public const int SizeInBytes = 24;
-        //[FieldOffset(0)]
+        [FieldOffset(0)]
         public byte PartitionType = 0;
-        //[FieldOffset(1)]
+        [FieldOffset(1)]
         public byte BootIndicator = 0;
-        //[FieldOffset(2)]
+        [FieldOffset(2)]
         public byte RecognizedPartition = 0;
-        //[FieldOffset(3)]
+        [FieldOffset(3)]
         public byte Padding1;
-        //[FieldOffset(4)]
+        [FieldOffset(4)]
         public UInt32 HiddenSectors = 0;
-        //[FieldOffset(8)]
+        [FieldOffset(8)]
         public Guid PartitionId = Guid.Empty;
-
-        public PARTITION_INFORMATION_MBR(byte[] buffer)
-        { }
     }
-    //[StructLayout(LayoutKind.Sequential)]
+
+    [StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_GPT
     {
+        //[PARTITION_INFORMATION_GPT]
+        //PartitionType(0)
+        //PartitionId(16)
+        //Attributes(32)
+        //Name(40)
         //actual size of C++ structure...
         public const int SizeInBytes = 112;
+        [FieldOffset(0)]
         public Guid PartitionType = Guid.Empty;
+        [FieldOffset(16)]
         public Guid PartitionId = Guid.Empty;
+        [FieldOffset(32)]
         public UInt64 Attributes = 0;
-        public string Name = "";
 
-        public PARTITION_INFORMATION_GPT(byte[] buffer)
-        { }
+        //in structure, it is WChar Name[36]
+        //Marshaling treat it as byte array so I should set SizeConst=36*sizeof(WChar).
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36*2)]
+        [FieldOffset(40)]
+        public byte[] NameRaw;
+        public string Name
+        {
+            get
+            {
+                //cleanup random garbage chars AFTER '\0'
+                bool clean = false;
+                for (int i = 2; i < NameRaw.Length; i++)
+                {
+                    if(clean == true)
+                        NameRaw[i] = 0;
+                    else if(NameRaw[i] == 0 && NameRaw[i-1] == 0 && NameRaw[i-2] == 0)
+                        clean = true;
+                }
+                return Encoding.Unicode.GetString(this.NameRaw).Trim('\0');
+            }
+        }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Explicit)]
     public class DRIVE_LAYOUT_INFORMATION_MBR 
     {
+        //[DRIVE_LAYOUT_INFORMATION_MBR]
+        //Signature(0)
+        //CheckSum(4)
         public const int SizeInBytes = 8;
+        [FieldOffset(0)]
         public UInt32 Signature = 0;
+        [FieldOffset(4)]
         public UInt32 CheckSum = 0;
     }
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Explicit)]
     public class DRIVE_LAYOUT_INFORMATION_GPT
     {
+        //[DRIVE_LAYOUT_INFORMATION_GPT]
+        //DiskId(0)
+        //StartingUsableOffset(16)
+        //UsableLength(24)
+        //MaxPartitionCount(32)
         public const int SizeInBytes = 40;
-        //offset 0
+        [FieldOffset(0)]
         public Guid DiskId = Guid.Empty;
-        //offset 16
+        [FieldOffset(16)]
         public Int64 StartingUsableOffset = 0;
-        //offset 24
+        [FieldOffset(24)]
         public Int64 UsableLength = 0;
-        //offset 32
+        [FieldOffset(32)]
         public UInt32 MaxPartitionCount = 0;
-        //4 bytes alignment padding
+        [FieldOffset(36)]
+        public UInt32 Padding = 0;
     }
-    //[StructLayout(LayoutKind.Explicit)]
+
+    [StructLayout(LayoutKind.Explicit)]
     public class PARTITION_INFORMATION_EX
     {
-        public const int HeaderSizeInBytes = 32;//+ PARTITION_INFORMATION_GPT.SizeInBytes;
+        //[PARTITION_INFORMATION_EX]
+        //PartitionStyle(0)
+        //StartingOffset(8)
+        //PartitionLength(16)
+        //PartitionNumber(24)
+        //RewritePartition(28)
+        //IsServicePartition(29)
+        //Gpt/Mbr(32)
+
+        public const int HeaderSizeInBytes = 32;
         public const int SizeInBytes = HeaderSizeInBytes + PARTITION_INFORMATION_GPT.SizeInBytes;
 
-        //[FieldOffset(0)]
+        [FieldOffset(0)]
         public PARTITION_STYLE PartitionStyle;
-        //[FieldOffset(8)]
+        [FieldOffset(8)]
         public Int64 StartingOffset = 0;
-        //[FieldOffset(16)]
+        [FieldOffset(16)]
         public Int64 PartitionLength = 0;
-        //[FieldOffset(24)]
+        [FieldOffset(24)]
         public UInt32 PartitionNumber = 0;
-        //[FieldOffset(28)]
+        [FieldOffset(28)]
         public byte RewritePartitionRaw = 0;
-        //[FieldOffset(29)]
+        [FieldOffset(29)]
         public byte IsServicePartitionRaw = 0;
-        //[FieldOffset(32)]
+
+        //[MarshalAs(UnmanagedType.Struct)]
+        [FieldOffset(32)]
         public PARTITION_INFORMATION_MBR MBR;
-        //[FieldOffset(32)]
+        //[MarshalAs(UnmanagedType.Struct)]
+        [FieldOffset(32)]
         public PARTITION_INFORMATION_GPT GPT;
 
         public bool RewritePartition { get { return Convert.ToBoolean(RewritePartitionRaw); } }
         public bool IsServicePartition { get { return Convert.ToBoolean(IsServicePartitionRaw); } }
-
-        public PARTITION_INFORMATION_EX(byte[] buffer)
-        { }
     }
 
     [StructLayout(LayoutKind.Explicit)]
     public class DRIVE_LAYOUT_INFORMATION_EX_HEADER
     {
+        //    [DRIVE_LAYOUT_INFORMATION_EX]
+        //    PartitionStyle(0)
+        //    PartitionCount(4)
+        //    Gpt/Mbr(8)
         public const int SizeInBytes = 8 + DRIVE_LAYOUT_INFORMATION_GPT.SizeInBytes;
         [FieldOffset(0)]
         public PARTITION_STYLE Style;   //PartitionStyle
         [FieldOffset(4)]
         public UInt32 Count;        //PartitionCount
+
+        [MarshalAs(UnmanagedType.Struct)]
         [FieldOffset(8)]
         public DRIVE_LAYOUT_INFORMATION_MBR MBR;
+        [MarshalAs(UnmanagedType.Struct)]
         [FieldOffset(8)]
         public DRIVE_LAYOUT_INFORMATION_GPT GPT;
-        
+
         //C++裡這邊後面接著不定長度 PARTITION_INFORMATION_EX[] 陣列，這在C#實在難辦。
         //只好拆成header，後面不定長度的資料分開parse....
     }
 
     public class DRIVE_LAYOUT_INFORMATION_EX
     {
+        //    [DRIVE_LAYOUT_INFORMATION_EX]
+        //    PartitionStyle(0)
+        //    PartitionCount(4)
+        //    Gpt/Mbr(8)
+        //    PartitionEntry(48)
         public DRIVE_LAYOUT_INFORMATION_EX_HEADER Header = null;
         public List<PARTITION_INFORMATION_EX> Partitions = new List<PARTITION_INFORMATION_EX>();
-        public DRIVE_LAYOUT_INFORMATION_EX(byte[] buffer)
+        public DRIVE_LAYOUT_INFORMATION_EX(byte[] buffer, int offset = 0)
         {
             this.Header = buffer.FromBytes<DRIVE_LAYOUT_INFORMATION_EX_HEADER>();
             if (this.Header != null && this.Header.Count > 0)
-            { 
-                int offset = DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes;
-                int size = PARTITION_INFORMATION_EX.SizeInBytes;
+            {
+                offset += DRIVE_LAYOUT_INFORMATION_EX_HEADER.SizeInBytes;
                 for (int i = 0; i < this.Header.Count; i++)
                 {
-                    offset += PARTITION_INFORMATION_EX.SizeInBytes * i;
-                    PARTITION_INFORMATION_EX found = 
-                        buffer.FromBytes<PARTITION_INFORMATION_EX>(offset, size);
+                    PARTITION_INFORMATION_EX found = buffer.FromBytes<PARTITION_INFORMATION_EX>(offset, PARTITION_INFORMATION_EX.SizeInBytes);
                     this.Partitions.Add(found);
+                    offset += PARTITION_INFORMATION_EX.SizeInBytes;
                 }
             }
-
         }
     }
 
@@ -255,7 +315,7 @@ namespace SpcLibrary.DeviceIoControl
             //IOCTL_DISK_GET_DRIVE_LAYOUT_EX 
             int error = 0;
             UInt32 ret_size = 0;
-            result = null;//new DRIVE_LAYOUT_INFORMATION_EX();
+            result = null;
             if(device.IsInvalid)
                 return false;
 
@@ -280,7 +340,9 @@ namespace SpcLibrary.DeviceIoControl
                     FILE_SHARE_MODE.SHARE_READ | FILE_SHARE_MODE.SHARE_WRITE,
                     FILE_DISPOSITION.OPEN_EXISTING, FILE_ATTR_AND_FLAG.NORMAL);
 
-            return GetDiskPartitions(device, out result);
+            bool ok = GetDiskPartitions(device, out result);
+            device.Dispose();
+            return ok;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace SpcLibrary.Win32API
         {
             if (IsDisposed == false)
             {
-                if (IntPtr.Zero != Handle && InvalidValue != Handle)
+                if (true == this.IsValid)
                 {
                     Kernel32.CloseHandle(Handle);
                     Handle = IntPtr.Zero;

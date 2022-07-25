@@ -72,6 +72,9 @@ namespace EnumPartitionOnDisk
                 msg += $"  Type={item.PartitionStyle}, Service Partition={item.IsServicePartition}\r\n";
                 msg += $"  Start={item.StartingOffset} & Length={item.PartitionLength}\r\n";
 
+                if (null == item.GPT)
+                    continue;
+
                 switch (item.PartitionStyle)
                 {
                     case PARTITION_STYLE.MBR:
@@ -79,8 +82,10 @@ namespace EnumPartitionOnDisk
                         msg += $"  PartitionId[{item.MBR.PartitionId.ToString()}]\r\n";
                         break;
                     case PARTITION_STYLE.GPT:
-                        msg += $"  PartitionType[{item.GPT.PartitionType}], Attributes[{item.GPT.Attributes}]\r\n";
-                        //msg += $" Name[{item.GPT.Name}]\r\n";
+                        msg += $"  PartitionType[{item.GPT.PartitionType}]\r\n";
+                        msg += $"  PartitionId[{item.GPT.PartitionId}]\r\n";
+                        msg += $"  Attributes[{item.GPT.Attributes}]\r\n";
+                        msg += $"  Name[{item.GPT.Name}]\r\n";
                         break;
                 }
 
