@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitAndFormatPhysicalDisk",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumPartitionOnDisk", "EnumPartitionOnDisk\EnumPartitionOnDisk.csproj", "{6A2334BA-8E35-417C-A534-BC76A7DE4BD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadWriteFile", "ReadWriteFile\ReadWriteFile.csproj", "{D5F354AD-F183-410A-B73D-28C0769825CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{6A2334BA-8E35-417C-A534-BC76A7DE4BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A2334BA-8E35-417C-A534-BC76A7DE4BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A2334BA-8E35-417C-A534-BC76A7DE4BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F354AD-F183-410A-B73D-28C0769825CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F354AD-F183-410A-B73D-28C0769825CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F354AD-F183-410A-B73D-28C0769825CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F354AD-F183-410A-B73D-28C0769825CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{39DE29EA-39AB-40FA-B979-9895DF216E76} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
 		{D0A3462D-53CC-4484-A772-0B61CB8E2B5F} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
 		{6A2334BA-8E35-417C-A534-BC76A7DE4BD4} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
+		{D5F354AD-F183-410A-B73D-28C0769825CA} = {930ACB1C-384A-4E2E-950B-77F6FF1A1A4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96B31948-C526-4D9F-9224-5D111B3AF0C2}
